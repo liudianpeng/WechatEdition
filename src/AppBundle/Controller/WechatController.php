@@ -18,6 +18,10 @@ class WechatController extends Controller
         $wechat = $this->get('app_wechat');
         try{
             $rawMessage = $wechat->getRawMessage();
+            if($echostr = $request->query->get('echostr')){
+                return new Response($echostr);
+            }
+            $message = $this->get('app_wechat_message_manager')->createFromRawMessage($rawMessage);
             return new Response('success');
         }
         catch(WechatException $e){
