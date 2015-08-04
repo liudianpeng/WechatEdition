@@ -17,3 +17,8 @@ parameters:
 
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
+    
+    wechat_appid: ~
+    wechat_appsecret: ~
+    wechat_token: ~
+    wechat_aeskey: ~

@@ -1,9 +1,19 @@
-# Learn more about services, parameters and containers at
-# http://symfony.com/doc/current/book/service_container.html
 parameters:
-#    parameter_name: value
+    app_wechat_client_class: Buzz\Client\Curl
+    app_wechat_class: YPL\WechatSDK\Wechat
+    app_wechat_message_manager_class: YPL\WechatSDK\Model\MessageManager
+
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+
+    app_wechat_client:
+        class: %app_wechat_client_class%
+
+    app_wechat_message_manager:
+        class: %app_wechat_message_manager_class%
+
+
+    app_wechat:
+        class: %app_wechat_class%
+        arguments: [ @app_wechat_client, {appid: %wechat_appid%, appsecret: %wechat_appsecret%, token: %wechat_token% }]
+
