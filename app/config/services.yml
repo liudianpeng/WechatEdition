@@ -21,3 +21,10 @@ services:
 
 
 
+    app.admin.block.wechat:
+        class: AppBundle\Block\WechatBlockService
+        tags:
+            - { name: sonata.block }
+        arguments:
+            - app.admin.block.wechat
+            - @templating

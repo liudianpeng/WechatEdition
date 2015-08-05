@@ -21,6 +21,13 @@
         "sensio/framework-extra-bundle": "~3.0,>=3.0.2",
         "incenteev/composer-parameter-handler": "~2.0",
         "snc/redis-bundle": "^1.1",
+        "snc/redis-bundle": "1.1.x-dev",
+        "friendsofsymfony/user-bundle": "2.0.x-dev",
+        "doctrine/migrations": "dev-master",
+        "doctrine/doctrine-migrations-bundle": "dev-master",
+        "knplabs/knp-paginator-bundle": "~2.4",
+        "sonata-project/admin-bundle": "^2.3",
+        "sonata-project/doctrine-orm-admin-bundle": "^2.3",
         "yplam/wechat-sdk": "dev-master"
     },
     "require-dev": {

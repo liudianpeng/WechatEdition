@@ -1,0 +1,438 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Filesystem\Filesystem;
+
+
+/**
+ * Tag
+ *
+ * @ORM\Table(name="tag", indexes={
+ * @ORM\Index(name="status", columns={"status"}),
+ * @ORM\Index(name="promoted", columns={"promoted"}),
+ * @ORM\Index(name="headline", columns={"headline"}),
+ * @ORM\Index(name="created_at", columns={"createdAt"})
+ * })
+ * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
+ */
+class Tag
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=255)
+     */
+    private $title;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="string", length=255)
+     */
+    private $description;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="status", type="boolean")
+     */
+    private $status;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="headline", type="boolean")
+     */
+    private $headline;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="promoted", type="boolean")
+     */
+    private $promoted;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="createdAt", type="datetime")
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updatedAt", type="datetime")
+     */
+    private $updatedAt;
+
+    /**
+     * @var array
+     *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Chrome\Theme", mappedBy="tags")
+     *
+     */
+    private $chromethemes;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="image", type="string", nullable=true)
+     */
+    private $image;
+
+    /**
+     * @Assert\Image(
+     *     maxSize = "8m",
+     *     mimeTypes = {"image/png", "image/jpeg", "image/jpg"},
+     *     mimeTypesMessage = "Please upload a valid PNG or JPEG image"
+     * )
+     */
+    private $file;
+
+    private $filename;
+
+    private $filepath;
+
+    public function __construct(){
+        $this->title = '';
+        $this->description = '';
+        $this->status = true;
+        $this->promoted = false;
+        $this->headline = false;
+        $this->createdAt = new \DateTime('now');
+        $this->updatedAt = $this->createdAt;
+        $this->chromethemes = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function __toString(){
+        return $this->title;
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     * @return Tag
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string 
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Tag
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set status
+     *
+     * @param boolean $status
+     * @return Tag
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return boolean 
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set promoted
+     *
+     * @param boolean $promoted
+     * @return Tag
+     */
+    public function setPromoted($promoted)
+    {
+        $this->promoted = $promoted;
+
+        return $this;
+    }
+
+    /**
+     * Get promoted
+     *
+     * @return boolean 
+     */
+    public function getPromoted()
+    {
+        return $this->promoted;
+    }
+
+    /**
+     * Set createdAt
+     *
+     * @param \DateTime $createdAt
+     * @return Tag
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Get createdAt
+     *
+     * @return \DateTime 
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Set updatedAt
+     *
+     * @param \DateTime $updatedAt
+     * @return Tag
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt
+     *
+     * @return \DateTime 
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set image
+     *
+     * @param string $image
+     * @return Tag
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Get image
+     *
+     * @return string 
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * Sets file.
+     *
+     * @param UploadedFile $file
+     */
+    public function setFile($file = null)
+    {
+        $this->file = $file;
+        // check if we have an old image path
+        if (isset($this->image)) {
+            // store the old name to delete after the update
+            $this->temp = $this->image;
+            $this->image = null;
+        } else {
+            $this->image = 'initial';
+        }
+    }
+
+    /**
+     * Get file.
+     *
+     * @return UploadedFile
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+
+    public function getAbsolutePath()
+    {
+        return null === $this->image
+            ? null
+            : $this->getUploadRootDir().'/'.$this->image;
+    }
+
+    /**
+     */
+    public function getWebPath()
+    {
+        return null === $this->image
+            ? null
+            : $this->getUploadDir().'/'.$this->image;
+    }
+
+    protected function getUploadRootDir()
+    {
+        // the absolute directory path where uploaded
+        // documents should be saved
+        return __DIR__.'/../../../web/'.$this->getUploadDir();
+    }
+
+    protected function getUploadDir()
+    {
+        return 'files/tag/images';
+    }
+
+    /**
+     * @ORM\PrePersist()
+     * @ORM\PreUpdate()
+     */
+    public function preUpload()
+    {
+        if (null !== $this->getFile()) {
+            //$this->name = $this->getFile()->getClientOriginalName();
+            $this->type = $this->getFile()->getMimeType();
+            $this->filename = md5(uniqid(mt_rand(), true)).'.'.$this->getFile()->guessExtension();
+            $this->filepath = date('Ym/d');
+            $this->image = $this->filepath . '/' .$this->filename;
+        }
+    }
+
+    /**
+     * @ORM\PostPersist()
+     * @ORM\PostUpdate()
+     */
+    public function upload()
+    {
+        if (null === $this->getFile()) {
+            return;
+        }
+        /*
+        $fs = new Filesystem();
+        if(!$fs->exists($this->getUploadRootDir().'/'.$this->filepath)){
+            $fs->mkdir($this->getUploadRootDir().'/'.$this->filepath);
+        }
+        */
+        $this->getFile()->move($this->getUploadRootDir().'/'.$this->filepath, $this->filename);
+
+        // check if we have an old image
+        if (isset($this->temp)) {
+            // delete the old image
+            @unlink($this->getUploadRootDir().'/'.$this->temp);
+            // clear the temp image path
+            $this->temp = null;
+        }
+        $this->file = null;
+    }
+
+    /**
+     * @ORM\PostRemove()
+     */
+    public function removeUpload()
+    {
+        $file = $this->getAbsolutePath();
+        if ($file) {
+            unlink($file);
+        }
+    }
+
+    /**
+     * Add chromethemes
+     *
+     * @param \AppBundle\Entity\Chrome\Theme $chromethemes
+     * @return Tag
+     */
+    public function addChrometheme(\AppBundle\Entity\Chrome\Theme $chromethemes)
+    {
+        $this->chromethemes[] = $chromethemes;
+
+        return $this;
+    }
+
+    /**
+     * Remove chromethemes
+     *
+     * @param \AppBundle\Entity\Chrome\Theme $chromethemes
+     */
+    public function removeChrometheme(\AppBundle\Entity\Chrome\Theme $chromethemes)
+    {
+        $this->chromethemes->removeElement($chromethemes);
+    }
+
+    /**
+     * Get chromethemes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getChromethemes()
+    {
+        return $this->chromethemes;
+    }
+}
