@@ -1,0 +1,52 @@
+set :application, ""
+set :domain,      ""
+set :deploy_to,   ""
+set :app_path,    "app"
+
+set :repository,  ""
+set :scm,         :git
+# Or: `accurev`, `bzr`, `cvs`, `darcs`, `subversion`, `mercurial`, `perforce`, or `none`
+
+set :model_manager, "doctrine"
+# Or: `propel`
+
+role :web,        domain                         # Your HTTP server, Apache/etc
+role :app,        domain, :primary => true       # This may be the same as your `Web` server
+
+set  :keep_releases,  5
+
+# Be more verbose by uncommenting the following line
+# logger.level = Logger::MAX_LEVEL
+#
+
+set :user, ""
+set :use_sudo, false
+set :deploy_via, :remote_cache
+
+
+set :shared_files,      ["app/config/parameters.yml"]
+set :shared_children,     [app_path + "/logs", web_path + "/files", "vendor", app_path + "/sessions"]
+set :use_composer, true
+set :update_vendors, true
+set :permission_method, :acl
+set :writable_dirs,       ["app/cache", "app/logs"]
+set :webserver_user,      "www-data"
+set :use_set_permissions, true
+
+
+set :deploy_via, :remote_cache
+
+# Need to clear *_dev controllers
+set :clear_controllers,     true
+
+# Controllers to clear
+#set :controllers_to_clear, ['app_dev.php']
+# Be more verbose by uncommenting the following line
+# logger.level = Logger::MAX_LEVEL
+#
+set :dump_assetic_assets,   true
+
+before "symfony:cache:warmup", "symfony:doctrine:migrations:migrate"
+after "deploy", "deploy:cleanup"
+
+
