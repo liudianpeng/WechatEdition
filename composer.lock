@@ -1617,12 +1617,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yplam/WechatSDK.git",
-                "reference": "1f882b714029fd2217de3537ab7237b1d02e03b7"
+                "reference": "69887791af6c37bde11380064825648a976eb480"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yplam/WechatSDK/zipball/1f882b714029fd2217de3537ab7237b1d02e03b7",
-                "reference": "1f882b714029fd2217de3537ab7237b1d02e03b7",
+                "url": "https://api.github.com/repos/yplam/WechatSDK/zipball/69887791af6c37bde11380064825648a976eb480",
+                "reference": "69887791af6c37bde11380064825648a976eb480",
                 "shasum": ""
             },
             "require": {
@@ -1654,7 +1654,7 @@
             "keywords": [
                 "wechat"
             ],
-            "time": "2015-08-04 14:45:30"
+            "time": "2015-08-05 03:34:47"
         }
     ],
     "packages-dev": [
