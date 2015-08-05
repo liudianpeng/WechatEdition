@@ -16,4 +16,8 @@ services:
     app_wechat:
         class: %app_wechat_class%
         arguments: [ @app_wechat_client, {appid: %wechat_appid%, appsecret: %wechat_appsecret%, token: %wechat_token% }]
+        calls:
+            - [setStorage, ["@snc_redis.default"]]
+
+
 
