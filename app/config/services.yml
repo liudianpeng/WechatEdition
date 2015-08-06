@@ -19,8 +19,6 @@ services:
         calls:
             - [setStorage, ["@snc_redis.default"]]
 
-
-
     app.admin.block.wechat:
         class: AppBundle\Block\WechatBlockService
         tags:
@@ -28,3 +26,12 @@ services:
         arguments:
             - app.admin.block.wechat
             - @templating
+    
+    app_wechat.subscribe.listener:
+        class: AppBundle\Wechat\EventListener\SubscribeSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments:
+            - @fos_user.user_manager
+            - @app_wechat
+

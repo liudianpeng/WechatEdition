@@ -9,11 +9,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="fos_user", indexes={
- * @ORM\Index(name="github_id", columns={"github_id"}),
- * @ORM\Index(name="google_id", columns={"google_id"}),
- * @ORM\Index(name="facebook_id", columns={"facebook_id"})
- * })
+ * @ORM\Table(name="fos_user")
  * @ORM\HasLifecycleCallbacks
  */
 class User extends BaseUser
@@ -24,27 +20,6 @@ class User extends BaseUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="github_id", type="string", length=255, nullable=true)
-     */
-    private $githubId;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="google_id", type="string", length=255, nullable=true)
-     */
-    private $googleId;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="facebook_id", type="string", length=255, nullable=true)
-     */
-    private $facebookId;
 
     /**
      * @var \DateTime
@@ -61,6 +36,28 @@ class User extends BaseUser
     private $picture;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="wechatId", type="string", length=255, nullable=true)
+     */
+    private $wechatId;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="wechatStatus", type="boolean")
+     */
+    private $wechatStatus;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="wechatAt", type="datetime", nullable=true)
+     */
+    private $wechatAt;
+
+
+    /**
      * @Assert\Image(
      *     maxSize = "200k",
      *     mimeTypes = {"image/png", "image/jpeg", "image/jpg"},
@@ -68,13 +65,6 @@ class User extends BaseUser
      * )
      */
     private $file;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="disqusmail", type="boolean")
-     */
-    private $disqusmail;
 
     private $filename;
 
@@ -85,10 +75,10 @@ class User extends BaseUser
         parent::__construct();
         // your own logic
         $this->createdAt = new \DateTime('now');
-
+        $this->wechatStatus = false;
     }
 
-    
+
     /**
      * Set createdAt
      *
@@ -105,7 +95,7 @@ class User extends BaseUser
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -128,7 +118,7 @@ class User extends BaseUser
     /**
      * Get picture
      *
-     * @return string 
+     * @return string
      */
     public function getPicture()
     {
@@ -138,7 +128,7 @@ class User extends BaseUser
     /**
      * Get picture
      *
-     * @return string 
+     * @return string
      */
     public function getAvatar()
     {
@@ -253,72 +243,37 @@ class User extends BaseUser
         }
     }
 
+
     /**
-     * Set githubId
+     * Get id
      *
-     * @param string $githubId
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set wechatId
+     *
+     * @param string $wechatId
      * @return User
      */
-    public function setGithubId($githubId)
+    public function setWechatId($wechatId)
     {
-        $this->githubId = $githubId;
+        $this->wechatId = $wechatId;
 
         return $this;
     }
 
     /**
-     * Get githubId
+     * Get wechatId
      *
      * @return string 
      */
-    public function getGithubId()
+    public function getWechatId()
     {
-        return $this->githubId;
-    }
-
-    /**
-     * Set googleId
-     *
-     * @param string $googleId
-     * @return User
-     */
-    public function setGoogleId($googleId)
-    {
-        $this->googleId = $googleId;
-
-        return $this;
-    }
-
-    /**
-     * Get googleId
-     *
-     * @return string 
-     */
-    public function getGoogleId()
-    {
-        return $this->googleId;
-    }
-
-    /**
-     * Set facebookId
-     *
-     * @param string $facebookId
-     * @return User
-     */
-    public function setFacebookId($facebookId)
-    {
-        $this->facebookId = $facebookId;
-
-        return $this;
-    }
-
-    /**
-     * Get facebookId
-     *
-     * @return string 
-     */
-    public function getFacebookId()
-    {
-        return $this->facebookId;
+        return $this->wechatId;
     }
 }

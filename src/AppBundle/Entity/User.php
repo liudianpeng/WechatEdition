@@ -9,7 +9,9 @@ use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="fos_user")
+ * @ORM\Table(name="fos_user", indexes={
+ * @ORM\Index(name="wechatId", columns={"wechatId"})
+ * })
  * @ORM\HasLifecycleCallbacks
  */
 class User extends BaseUser
@@ -36,6 +38,28 @@ class User extends BaseUser
     private $picture;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="wechatId", type="string", length=255, nullable=true)
+     */
+    private $wechatId;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="wechatStatus", type="boolean")
+     */
+    private $wechatStatus;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="wechatAt", type="datetime", nullable=true)
+     */
+    private $wechatAt;
+
+
+    /**
      * @Assert\Image(
      *     maxSize = "200k",
      *     mimeTypes = {"image/png", "image/jpeg", "image/jpg"},
@@ -53,6 +77,7 @@ class User extends BaseUser
         parent::__construct();
         // your own logic
         $this->createdAt = new \DateTime('now');
+        $this->wechatStatus = false;
     }
 
 
@@ -220,4 +245,83 @@ class User extends BaseUser
         }
     }
 
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set wechatId
+     *
+     * @param string $wechatId
+     * @return User
+     */
+    public function setWechatId($wechatId)
+    {
+        $this->wechatId = $wechatId;
+
+        return $this;
+    }
+
+    /**
+     * Get wechatId
+     *
+     * @return string 
+     */
+    public function getWechatId()
+    {
+        return $this->wechatId;
+    }
+
+    /**
+     * Set wechatStatus
+     *
+     * @param boolean $wechatStatus
+     * @return User
+     */
+    public function setWechatStatus($wechatStatus)
+    {
+        $this->wechatStatus = $wechatStatus;
+
+        return $this;
+    }
+
+    /**
+     * Get wechatStatus
+     *
+     * @return boolean 
+     */
+    public function getWechatStatus()
+    {
+        return $this->wechatStatus;
+    }
+
+    /**
+     * Set wechatAt
+     *
+     * @param \DateTime $wechatAt
+     * @return User
+     */
+    public function setWechatAt($wechatAt)
+    {
+        $this->wechatAt = $wechatAt;
+
+        return $this;
+    }
+
+    /**
+     * Get wechatAt
+     *
+     * @return \DateTime 
+     */
+    public function getWechatAt()
+    {
+        return $this->wechatAt;
+    }
 }
