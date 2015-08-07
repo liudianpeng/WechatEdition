@@ -8,6 +8,8 @@ use AppBundle\Wechat\WechatEvents;
 use AppBundle\Wechat\Event\MessageEvent;
 use FOS\UserBundle\Model\UserManagerInterface;
 
+use YPL\WechatSDK\Model\Response\TextResponse;
+
 class SubscribeSubscriber implements EventSubscriberInterface
 {
     private $um;
@@ -28,7 +30,8 @@ class SubscribeSubscriber implements EventSubscriberInterface
 
     public function onSubscribe(MessageEvent $event)
     {
-        $wechatId = $event->getMessage()->getFromUserName();
+        $message = $event->getMessage();
+        $wechatId = $message->getFromUserName();
         $user = $this->um->findUserBy(array('wechatId'=>$wechatId));
         if($user){
             $user->setWechatStatus(true);
@@ -60,6 +63,14 @@ class SubscribeSubscriber implements EventSubscriberInterface
         }
         
         $this->um->updateUser($user);
+
+        // 发一条默认消息
+        $event->getResponse()->setResponseMessage(new TextResponse(array(
+            'ToUserName' => $message->getFromUserName(),
+            'FromUserName' => $message->getToUserName(),
+            'Content' => "Hi {$result['nickname']}, 欢迎关注我们的微信账号。想获取更多信息，请登录我们的网站。",
+        )));
+
     }
 
     public function onUnsubscribe(MessageEvent $event)

@@ -2019,16 +2019,16 @@
         },
         {
             "name": "sonata-project/core-bundle",
-            "version": "2.3.4",
+            "version": "2.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sonata-project/SonataCoreBundle.git",
-                "reference": "ebb05829aaa9f0fc0afa904bf6b6441ea34cf638"
+                "reference": "d5e0aea3998d6e94de01c475db972dca67786c28"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sonata-project/SonataCoreBundle/zipball/ebb05829aaa9f0fc0afa904bf6b6441ea34cf638",
-                "reference": "ebb05829aaa9f0fc0afa904bf6b6441ea34cf638",
+                "url": "https://api.github.com/repos/sonata-project/SonataCoreBundle/zipball/d5e0aea3998d6e94de01c475db972dca67786c28",
+                "reference": "d5e0aea3998d6e94de01c475db972dca67786c28",
                 "shasum": ""
             },
             "require": {
@@ -2084,7 +2084,7 @@
             "keywords": [
                 "sonata"
             ],
-            "time": "2015-06-16 14:06:45"
+            "time": "2015-08-05 15:17:10"
         },
         {
             "name": "sonata-project/doctrine-orm-admin-bundle",
@@ -2690,12 +2690,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/yplam/WechatSDK.git",
-                "reference": "3410459657c99cbd0b192b0b41dda94a1bf55dc1"
+                "reference": "163d7e2580c4d369db97d368c308821e9645f014"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/yplam/WechatSDK/zipball/3410459657c99cbd0b192b0b41dda94a1bf55dc1",
-                "reference": "3410459657c99cbd0b192b0b41dda94a1bf55dc1",
+                "url": "https://api.github.com/repos/yplam/WechatSDK/zipball/163d7e2580c4d369db97d368c308821e9645f014",
+                "reference": "163d7e2580c4d369db97d368c308821e9645f014",
                 "shasum": ""
             },
             "require": {
@@ -2727,7 +2727,7 @@
             "keywords": [
                 "wechat"
             ],
-            "time": "2015-08-05 04:07:03"
+            "time": "2015-08-06 10:13:20"
         }
     ],
     "packages-dev": [],

@@ -22,6 +22,8 @@ class WechatController extends Controller
      */
     public function wechatAction(Request $request)
     {
+        $this->get('logger')->error('get', $_GET);
+        $this->get('logger')->error(file_get_contents("php://input"));
         $wechat = $this->get('app_wechat');
         $response = new Response('success');
         $response->setWechat($wechat);
