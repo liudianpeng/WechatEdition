@@ -33,14 +33,14 @@ class SubscribeSubscriber implements EventSubscriberInterface
         $message = $event->getMessage();
         $wechatId = $message->getFromUserName();
         $user = $this->um->findUserBy(array('wechatId'=>$wechatId));
+        $result = $this->wechat->getUserInfo($wechatId);
+        if(isset($result['errcode'])){ // 出错，选择不创建用户
+            return;
+        }
         if($user){
             $user->setWechatStatus(true);
         }
         else{
-            $result = $this->wechat->getUserInfo($wechatId);
-            if(isset($result['errcode'])){ // 出错，选择不创建用户
-                return;
-            }
             $user = $this->um->createUser();
             $username = $result['nickname'];
             $email = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36).'@'.$_SERVER['HTTP_HOST'];

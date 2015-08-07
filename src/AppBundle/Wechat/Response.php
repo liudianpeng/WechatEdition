@@ -40,13 +40,35 @@ class Response extends HttpResponse
         $this->responseMessage = $responseMessage;
     }
 
+    public function sendContent()
+    {
+        if($this->wechat && $this->hasResponseMessage()){
+            echo $this->wechat->response($this->getResponseMessage()->getRawResponse());
+        }
+        else{
+            echo $this->content;
+        }
+
+        return $this;
+    }
+
+    public function getContent()
+    {
+        if($this->wechat && $this->hasResponseMessage()){
+            return $this->wechat->response($this->getResponseMessage()->getRawResponse());
+        }
+        else{
+            return $this->content;
+        }
+    }
+
     public function __toString()
     {
         if($this->wechat && $this->hasResponseMessage()){
             return
                 sprintf('HTTP/%s %s %s', $this->version, $this->statusCode, $this->statusText)."\r\n".
                 $this->headers."\r\n".
-                $wechat->response($this->getResponseMessage()->getRawResponse());
+                $this->wechat->response($this->getResponseMessage()->getRawResponse());
         }
         return parent::__toString();
     }
