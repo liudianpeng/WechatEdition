@@ -98,27 +98,6 @@ sensio_framework_extra:
     cache:    { annotations: false }
     security: { annotations: false }
 
-sonata_block:
-    default_contexts: [cms]
-    blocks:
-        # Enable the SonataAdminBundle block
-        sonata.admin.block.admin_list:
-            contexts:   [admin]
-        app.admin.block.wechat:
-            contexts:   [admin]
-
-
-sonata_admin:
-    title: Admin
-    dashboard:
-        blocks:
-            -
-                position: left
-                type: sonata.admin.block.admin_list
-            -
-                position: left
-                type: app.admin.block.wechat
-
 knp_paginator:
     page_range: 10                      # default page range used in pagination control
     default_options:

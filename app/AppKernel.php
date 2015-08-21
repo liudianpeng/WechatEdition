@@ -23,11 +23,7 @@ class AppKernel extends Kernel
             new AppBundle\AppBundle(),
 
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
-            new Sonata\CoreBundle\SonataCoreBundle(),
-            new Sonata\BlockBundle\SonataBlockBundle(),
             new Knp\Bundle\MenuBundle\KnpMenuBundle(),
-            new Sonata\DoctrineORMAdminBundle\SonataDoctrineORMAdminBundle(),
-            new Sonata\AdminBundle\SonataAdminBundle(),
             new YPL\WechatBundle\YPLWechatBundle(),
         );
 
