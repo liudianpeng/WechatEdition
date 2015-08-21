@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="ypl_wechat.client.class">Buzz\Client\Curl</parameter>
+        <parameter key="ypl_wechat.class">YPL\WechatSDK\Wechat</parameter>
+        <parameter key="ypl_wechat.message.manager.class">YPL\WechatSDK\Model\MessageManager</parameter>
+    </parameters>
+
+    <services>
+        <service id="ypl_wechat.client" class="%ypl_wechat.client.class%">
+        </service>
+        <service id="ypl_wechat.message.manager" class="%ypl_wechat.message.manager.class%">
+        </service>
+        <service id="ypl_wechat" class="%ypl_wechat.class%">
+            <argument type="service" id="ypl_wechat.client" />
+            <argument type="collection">
+                <argument key="appid">%wechat_appid%</argument>
+                <argument key="appsecret">%wechat_appsecret%</argument>
+                <argument key="token">%wechat_token%</argument>
+                <argument key="aesKey">%wechat_aeskey%</argument>
+            </argument>
+            <call method="setStorage">
+                <argument type="service" id="snc_redis.default" />
+            </call>
+        </service>
+    </services>
+</container>

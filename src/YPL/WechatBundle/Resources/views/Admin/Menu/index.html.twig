@@ -1,0 +1,243 @@
+{% extends 'YPLWechatBundle::layout.html.twig' %}
+
+{% block page_title %}菜单管理{% endblock %}
+
+{% block admin_content %}
+  <style>
+  #wechat-menu-edit li {padding:5px;}
+  </style>
+  <div class="row">
+  <div class="col-md-6">
+    <div class="box">
+      <div class="box-header">
+        <h3 class="box-title">菜单排序</h3>
+      </div>
+      <div class="box-body">
+        <ul class="list-unstyled" id="wechat-menu-edit">
+        {% set menu_id = 0 %}
+        {% for menu in buttons%}
+          {% set menu_id = menu_id + 1 %}
+          <li class="clearfix" id="menu-item-{{ menu_id }}"><div><a href="javascript:;" attr-type="{% if menu['type'] is defined%}{{ menu['type'] }}{% endif %}", attr-name="{{ menu['name'] }}", attr-key="{% if menu['key'] is defined%}{{ menu['key'] }}{% endif %}", attr-url="{% if menu['url'] is defined%}{{ menu['url'] }}{% endif %}", attr-media_id="{% if menu['media_id'] is defined%}{{ menu['media_id'] }}{% endif %}"><i class="glyphicon glyphicon-move"></i>{{ menu['name'] }}</a></div>
+            <ul class="">
+            {% for submenu in menu['sub_button'] %}
+              {% set menu_id = menu_id + 1 %}
+              <li class="" id="menu-item-{{ menu_id }}"><div><a href="javascript:;" attr-type="{% if submenu['type'] is defined%}{{ submenu['type'] }}{% endif %}", attr-name="{{ submenu['name'] }}", attr-key="{% if submenu['key'] is defined%}{{ submenu['key'] }}{% endif %}", attr-url="{% if submenu['url'] is defined%}{{ submenu['url'] }}{% endif %}", attr-media_id="{% if submenu['media_id'] is defined%}{{ submenu['media_id'] }}{% endif %}"><i class="glyphicon glyphicon-move"></i>{{ submenu['name'] }}</a></div></li>
+            {% endfor %}
+            </ul>
+          </li>
+        {% endfor %}
+        </ul>
+        <button type="submit" id="menu-submit" class="btn btn-primary">更新菜单</button>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="box">
+      <div class="box-header">
+        <h3 class="box-title">菜单编辑</h3>
+      </div>
+      <div class="box-body">
+        <form id="menu-form">
+          <div class="form-group">
+            <label for="name">菜单名称</label>
+            <input type="text" class="form-control" id="menu-name">
+          </div>
+          <div class="form-group">
+            <label for="menu-type">菜单类型</label>
+            <select class="form-control" id="menu-type">
+              <option value="">父菜单</option>
+              <option value="click">点击推事件</option>
+              <option value="view">跳转URL</option>
+              <option value="scancode_push">扫码推事件</option>
+              <option value="scancode_waitmsg">扫码推事件且弹出“消息接收中”提示框</option>
+              <option value="pic_sysphoto">弹出系统拍照发图</option>
+              <option value="pic_photo_or_album">弹出拍照或者相册发图</option>
+              <option value="pic_weixin">弹出微信相册发图器</option>
+              <option value="location_select">弹出地理位置选择器</option>
+              <option value="media_id">下发消息（除文本消息）</option>
+              <option value="view_limited">跳转图文消息URL</option>
+            </select>
+          </div>
+          <div class="form-group menu-group-key">
+            <label for="name">事件KEY</label>
+            <input type="text" class="form-control" id="menu-key">
+          </div>
+          <div class="form-group menu-group-url" style="display:none;">
+            <label for="name">URL连接</label>
+            <input type="text" class="form-control" id="menu-url">
+          </div>
+          <div class="form-group menu-group-media" style="display:none;">
+            <label for="name">素材ID</label>
+            <input type="text" class="form-control" id="menu-media">
+          </div>
+          <button type="submit" id="menu-add" class="btn btn-default">添加新菜单</button>
+          <button type="submit" id="menu-edit" class="btn btn-primary hide">保存菜单</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+{% set menu_id = menu_id + 1 %}
+currentMenuId = {{ menu_id }}
+</script>
+{% endblock %}
+
+
+{% block javascripts %}
+{{ parent() }}
+<script src="{{ asset('bundles/yplwechat/js/jquery.mjs.nestedSortable.js') }}" type="text/javascript"></script>
+<script>
+jQuery(function(){
+  var currentMenu = null;
+
+
+  var sortable = $( "#wechat-menu-edit" ).nestedSortable({
+    handle: 'div',
+    items: 'li',
+    toleranceElement: '> div',
+    listType: 'ul',
+    maxLevels: 2
+  });
+
+  var urlItems = ['view'];
+  var keyItems = ['click', 'scancode_push', 'scancode_waitmsg', 'pic_sysphoto', 'pic_photo_or_album', 'pic_weixin', 'location_select'];
+  var mediaItems = ['media_id', 'view_limited'];
+
+  $( "#wechat-menu-edit a" ).click(function(){
+    currentMenu = this;
+    var that = $(this);
+    $('#menu-edit').removeClass('hide');
+    $('#menu-type').val(that.attr('attr-type'));
+    $('#menu-type').change();
+    $('#menu-name').val(that.attr('attr-name'));
+    $('#menu-url').val(that.attr('attr-url'));
+    $('#menu-key').val(that.attr('attr-key'));
+    $('#menu-media_id').val(that.attr('attr-media_id'));
+  });
+  $( "#menu-type" ).change(function(){
+    var menuType = $(this).val();
+    if(urlItems.indexOf(menuType) >= 0){
+      $('.menu-group-key').hide();
+      $('.menu-group-url').show();
+      $('.menu-group-media').hide();
+    }
+    else if(keyItems.indexOf(menuType) >= 0){
+      $('.menu-group-key').show();
+      $('.menu-group-url').hide();
+      $('.menu-group-media').hide();
+    }
+    else{
+      $('.menu-group-key').hide();
+      $('.menu-group-url').hide();
+      $('.menu-group-media').show();
+    }
+  });
+
+  $('#menu-add').click(function(e){
+    e.preventDefault();
+    currentMenuId = currentMenuId + 1;
+
+    var menuName = $('#menu-name').val();
+    var menuType = $('#menu-type').val();
+    var menuUrl = '';
+    var menuKey = '';
+    var menuMediaId = '';
+
+    if(urlItems.indexOf(menuType) >= 0){
+      menuUrl = $('#menu-url').val();
+    }
+    else if(keyItems.indexOf(menuType) >= 0){
+      menuKey = $('#menu-key').val();
+    }
+    else{
+      menuMediaId = $('#menu-media_id').val();
+    }
+    $('#wechat-menu-edit').append('<li class="clearfix" id="menu-item-'+currentMenuId+'"><div><a href="javascript:;" attr-type="'+menuType+'", attr-name="'+menuName+'", attr-key="'+menuKey+'", attr-url="'+menuUrl+'", attr-media_id="'+menuMediaId+'"><i class="glyphicon glyphicon-move"></i>'+menuName+'</a></div><ul class=""></ul></li>');
+    document.getElementById('menu-form').reset();
+    $( "#wechat-menu-edit" ).nestedSortable('refresh');
+    return false;
+  });
+
+  $('#menu-edit').click(function(e){
+    e.preventDefault();
+    that = $(currentMenu);
+    that.attr('attr-name', $('#menu-name').val());
+    that.attr('attr-type', $('#menu-type').val());
+    that.text($('#menu-name').val());
+    that.attr('attr-url', '');
+    that.attr('attr-key', '');
+    that.attr('attr-media_id', '');
+    var menuType = $('#menu-type').val();
+    if(urlItems.indexOf(menuType) >= 0){
+      that.attr('attr-url', $('#menu-url').val());
+    }
+    else if(keyItems.indexOf(menuType) >= 0){
+      that.attr('attr-key', $('#menu-key').val());
+    }
+    else{
+      that.attr('attr-media_id', $('#menu-media_id').val());
+    }
+    document.getElementById('menu-form').reset();
+    return false;
+  });
+
+  $('#menu-submit').click(function(e){
+    e.preventDefault();
+    var menu = $( "#wechat-menu-edit" ).nestedSortable('toHierarchy');
+    console.log(menu);
+    var buttons = new Array();
+    var button = null;
+    for(var i=0,j=menu.length; i<j; i++){
+      if(menu[i].children){
+        button = {};
+        button.name = $('#menu-item-'+menu[i].id+' a').attr('attr-name');
+        button.sub_button = [];
+        for(var k=0,l=menu[i].children.length; k < l; k++){
+          button.sub_button.push(getMenuFromId(menu[i].children[k].id))
+        }
+        buttons.push(button);
+      }
+      else{
+        buttons.push(getMenuFromId(menu[i].id));
+      }
+    }
+    var menuObj = {};
+    menuObj.button = buttons;
+    $.post('{{ path('ypl_wechat_admin_menu') }}', {menu:JSON.stringify(menuObj)}, function(re){
+      console.log(re);
+      if(re.status){
+        alert('菜单更新成功');
+      }
+      else{
+        alert(re.message);
+      }
+      
+    });
+    return false;
+  });
+
+  function getMenuFromId(id){
+    var menuElement = $('#menu-item-'+id+' a');
+    var button = {};
+    button.name = menuElement.attr('attr-name');
+    var menuType = menuElement.attr('attr-type');
+    button.type = menuType;
+    if(urlItems.indexOf(menuType) >= 0){
+      button.url = menuElement.attr('attr-url');
+    }
+    else if(keyItems.indexOf(menuType) >= 0){
+      button.key = menuElement.attr('attr-key');
+    }
+    else{
+      button.media_id = menuElement.attr('attr-media_id');
+    }
+    return button;
+  }
+});
+
+</script>
+{% endblock %}
+
+
+

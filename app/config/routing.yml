@@ -4,7 +4,7 @@ ypl_wechat:
     
 ypl_wechat_admin:
     resource: "@YPLWechatBundle/Resources/config/routing/admin.xml"
-    prefix:   /admin
+    prefix:   /admin/wechat
 
 app:
     resource: "@AppBundle/Controller/"

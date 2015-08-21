@@ -1,0 +1,5 @@
+{% extends 'YPLWechatBundle::layout.html.twig' %}
+{% block page_title %}Admin{% endblock %}
+{% block admin_content %}
+{{ knp_menu_render('YPLWechatBundle:WechatAdmin:mainMenu', {'allow_safe_labels': true}) }}
+{% endblock %}
